@@ -3,7 +3,7 @@ title: Revo API Factoring Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - ruby
-  - json
+  - java
 
  toc_footers:
  - <a href='#'>Sign Up for a Developer Key</a>
