@@ -3,12 +3,11 @@ title: Revo API Factoring Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - ruby
-  - python
-  - javascript
+  - json
 
-toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
+# toc_footers:
+# - <a href='#'>Sign Up for a Developer Key</a>
+# - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
 
 includes:
   - errors
@@ -16,7 +15,7 @@ includes:
 search: true
 ---
 
-# Introduction NEW !
+# Введение
 
 Welcome to the REVO API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
 
@@ -24,7 +23,7 @@ We have language bindings in Shell, Ruby, and Python! You can view code examples
 
 This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
 
-# Authentication
+# Авторизация
 
 > To authorize, use this code:
 
