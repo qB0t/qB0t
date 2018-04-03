@@ -16,7 +16,7 @@ includes:
 search: true
 ---
 
-# Introduction
+# Introduction 2
 
 Welcome to the REVO API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
 
