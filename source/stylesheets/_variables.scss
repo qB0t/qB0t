@@ -43,6 +43,7 @@ $search-notice-bg: #c97a7e !default;
 
 // TEXT COLORS
 ////////////////////
+//$code-annotation-text: #b93d6a; //code annotation color [IVAN]
 $main-text: #333 !default; // main content text color
 $nav-text: #fff !default;
 $nav-active-text: #fff !default;
@@ -81,7 +82,7 @@ $phone-width: $tablet-width - $nav-width !default; // min width before reverting
 
 %code-font {
   font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.5;
 }
 

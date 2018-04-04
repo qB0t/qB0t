@@ -454,6 +454,7 @@ html, body {
     border-radius: 3px;
     @extend %break-words;
     @extend %code-font;
+    color: #b93d6a;
   }
 
   pre>code {
