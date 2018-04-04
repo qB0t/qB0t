@@ -22,6 +22,8 @@ API Factoring реализовано на протоколе HTTPS на осно
 
 ## Базовые URL адреса
 
+> Базовые адреса
+
 ```javascript
 BASE_URL = "https://r.revoplus.ru/"  production
 BASE_URL = "https://demo.revoplus.ru/"  demo
@@ -35,6 +37,8 @@ BASE_URL = "https://demo.revoplus.ru/"  demo
 
 Уникальный идентификатор партнёра `store-id` создается на стороне Revo. В данном примере - это число 12. У одного партнера (магазина), может быть несколько уникальных идентификаторов.
 Секретный ключ `secret_key` используется при формировании электронно-цифровой подписи для аутентификации (проверки подлинности) параметров запроса с целью защиты формы от запуска сторонними лицами. Длина ключа от 8 байт. Алгоритм шифрования SHA1.
+
+> Пример запроса
 
 ```javascript
 store_id = 12­
@@ -127,8 +131,8 @@ https://r.revoplus.ru/factoring/v1/precheck/auth?store_id=12345&signature=adlskd
 -:|:-
 **callback_url** <br> <font color="#939da3">строка</font>	| URL для ответа от Рево по решению для клиента
 **redirect_url** <br> <font color="#939da3">строка</font>	| URL для редиректа после нажатия на кнопку/ссылку в форме Рево "Вернуться в интернет магазин". Например, это может быть страница корзины. Можно также вводить дополнительные проверки и перенаправлять пользователя на другие страницы в зависимости от ответа, полученного ранее на `callback_url`.
-**current_order** <br> <font color="#939da3">объект</font>,	|
-**order_id** <br> <font color="#939da3">строка, <i>опц.</i></font> |	Уникальный номер заказа. Не более 255 символов
+**current_order** <br> <font color="#939da3">объект</font> | Объект, содержащий информацию о заказе
+**order_id** <br> <font color="#939da3">строка, *опц.*</font> |Уникальный номер заказа. Не более 255 символов
 
 ### Параметры ответа
 
@@ -147,6 +151,18 @@ https://r.revoplus.ru/factoring/v1/precheck/auth?store_id=12345&signature=adlskd
 **status** <br> <font color="#939da3">число</font> | 	Код ответа
 **message** <br> <font color="#939da3">строка</font> | 	Короткое текстовое описание ответа
 **iframe_url** <br> <font color="#939da3">строка</font>	| Cсылка на сгенерированный iFrame
+
+## Precheck
+
+## Status
+
+## Finish
+
+## Cancel
+
+## Limit
+
+## Return
 
 # Коды ошибок
 
@@ -170,3 +186,83 @@ https://r.revoplus.ru/factoring/v1/precheck/auth?store_id=12345&signature=adlskd
 **80**  | Unable to finish - order is already finished/canceled
 **81**  | Unable to cancel - order is already finished/canceled
 **100** | At the moment the server cannot process your request
+
+# Схемы взаимодействия
+
+Возможны следующие схемы взаимодействия:
+
+<table border="0" align="center">
+  <tr>
+    <th rowspan="2">Схема</th>
+    <th colspan="3" align="center">Предоплата</th>
+    <th rowspan="2">Изменение заказа</th>
+  </tr>
+  <tr>
+    <th>Партнёр</th>
+    <th>Рево</th>
+    <th>Отсутствует</th>
+  </tr>
+  <tr>
+    <td>Факторинг 1</td>
+    <td>х</td>
+    <td></td>
+    <td></td>
+    <td>х</td>
+  </tr>
+  <tr>
+    <td>Факторинг 2</td>
+    <td></td>
+    <td>x</td>
+    <td></td>
+    <td>х</td>
+  </tr>
+  <tr>
+    <td><a href="http://localhost:4567/#3">Факторинг 3</a></td>
+    <td></td>
+    <td></td>
+    <td>x</td>
+    <td>х</td>
+  </tr>
+  <tr>
+    <td>Факторинг 4</td>
+    <td>х</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Факторинг 5</td>
+    <td></td>
+    <td>x</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Факторинг 6</td>
+    <td></td>
+    <td></td>
+    <td>x</td>
+    <td></td>
+  </tr>
+</table>
+
+## Факторинг 1
+
+## Факторинг 2
+
+## Факторинг 3
+
+Данная схема взаимодействия поддерживает:
+
+- оформление заказа в интернет магазине
+- подтверждение или корректировку заказа
+- доставку заказа в течении 60 дней после оформления
+- частичный или полный возврат заказа
+
+<img src="images/F3.png">
+
+## Факторинг 4
+
+## Факторинг 5
+
+## Факторинг 6
