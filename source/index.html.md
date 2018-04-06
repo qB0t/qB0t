@@ -52,7 +52,10 @@ secret_key = "SECRET_KEY_STORE"
 ```ruby
 require 'digest/sha1'
 secret_key = '098f6bcd4621d373cade4e832627b4f6'
-data = "{\"callback_url\":\"https://shop.ru/revo/decision\",\"redirect_url\":\"https://shop.ru/revo/redirect\",\"current_order\":{\"sum\":\"7500.00\",\"order_id\":\"R001233\"},\"primary_phone\":\"9268180621\"}"
+data = "{\"callback_url\":\"https://shop.ru/revo/decision\",
+\"redirect_url\":\"https://shop.ru/revo/redirect\",
+\"current_order\":{\"sum\":\"7500.00\",\"order_id\":\"R001233\"},
+\"primary_phone\":\"9268180621\"}"
 signature = Digest::SHA1.hexdigest(data + secret_key)
 ```
 
@@ -108,7 +111,7 @@ public class Main {
 Магазин партнера для получения ссылки на iFrame Рево с процедурой регистрации/аутентификации пользователя вызывает метод `auth`.
 
 ### Параметры пути
-Параметр | Описание
+ | |
 -:|:-
 **store_id** <br> <font color="#939da3">число</font> | Полученный от Рево [уникальный идентификатор](http://localhost:4567/#3b61794258)
 **signature** <br> <font color="#939da3">строка</font> | Цифровая подпись в виде сериализованного в строку json запроса, сконкатенированного с секретным ключом и закодированного по SHA1. Подробнее: [Принцип формирования цифровой подписи] (http://localhost:4567/#1c37860b3b).
@@ -119,15 +122,17 @@ public class Main {
 https://r.revoplus.ru/factoring/v1/precheck/auth?store_id=12345&signature=adlskdkjf12oasjd14fjasdkflkfjosdafd
 
 {
- "callback_url": "https://shop.ru/revo/decision",
- "redirect_url": "https://shop.ru/revo/redirect",
- "current_order": {
- "order_id": "R107356"
+ callback_url: "https://shop.ru/revo/decision",
+ redirect_url: "https://shop.ru/revo/redirect",
+ current_order:
+  {
+    order_id: "R107356"
+  }
 }
 ```
 
 ### Параметры запроса
-Параметр | Описание
+ | |
 -:|:-
 **callback_url** <br> <font color="#939da3">строка</font>	| URL для ответа от Рево по решению для клиента
 **redirect_url** <br> <font color="#939da3">строка</font>	| URL для редиректа после нажатия на кнопку/ссылку в форме Рево "Вернуться в интернет магазин". Например, это может быть страница корзины. Можно также вводить дополнительные проверки и перенаправлять пользователя на другие страницы в зависимости от ответа, полученного ранее на `callback_url`.
@@ -146,13 +151,73 @@ https://r.revoplus.ru/factoring/v1/precheck/auth?store_id=12345&signature=adlskd
 }
 ```
 
-Параметр | Описание
+```json-doc
+{
+  status: 0,
+  message: "Payload valid",
+  iframe_url: "https://r.revoplus.ru/form/v1/af45ef12f4233f"
+}
+```
+
+```json
+{
+  status: 0,
+  message: "Payload valid",
+  iframe_url: "https://r.revoplus.ru/form/v1/af45ef12f4233f"
+}
+```
+
+ | |
 -:|:-
 **status** <br> <font color="#939da3">число</font> | 	Код ответа
 **message** <br> <font color="#939da3">строка</font> | 	Короткое текстовое описание ответа
 **iframe_url** <br> <font color="#939da3">строка</font>	| Cсылка на сгенерированный iFrame
 
 ## Precheck
+
+<font color="green"> POST </font>
+`BASE_URL/factoring/v1/precheck/auth?store_id=STORE_ID&signature=YOUR_GENERATED_SHA`
+
+```jsonnet
+{
+  callback_url: "https://shop.ru/revo/decision",
+  redirect_url: "https://shop.ru/revo/redirect",
+  current_order:
+  {
+    amount: "6700.00",
+    order_id: "R107356",
+    valid_till: "21.04.2017 12:08:01+03:00"
+  },
+  primary_phone: "8880010203",
+  skip_factoring_result: "false"
+}
+```
+Магазин партнера для получения ссылки на iFrame Рево и одновременной аутентификации должен передать три параметра:
+
+store_id - полученный от Рево уникальный идентификатор. (см.подробнее Данный для авторизации)
+Служебные данные и данные по клиенту в json(формат json отображен подробнее справа)
+Сериализованный в строку исходный json сконкатенированный с секретным ключом. Все это закодировано по SHA1 и является цифровой подписью(см.подробнее Принципе формирования цифровой подписи)
+Исходный json c данными отправляются с бэкэнда магазина партнера в теле POST запроса на сервер Рево(см. Базовые URL адреса сервиса)
+
+
+callback_url – URL куда приходит ответ по кредитному решению Рево для клиента.
+redirect_url – URL на который идет редирект после нажатия на кнопку/ссылку в форме Рево "Вернуться в интернет магазин". Можно использовать в качестве redirect_url, например, страницу корзины. Можно также вводить дополнительные проверки и перенаправлять пользователя на другие страницы в зависимости от ответа, полученного ранее на callback_url.
+current_order – объект с обязательными полем order_id и amount
+amount - сумма в рублях с копейками(важно передавать именно с точкой, т.к это значение типа float).
+order_id - номер заказа (уникальное значение, строка до 255 символов). Поле order_id должно быть уникальным в рамках интернет магазина.
+valid_till - срок до которого холдирование заказа считается актуальным. Значение параметра обязательно должно включать часовой пояс. После истечения указанного срока, запрос будет отменен.
+primary_phone - номер телефона клиента 10 цифр (без кода страны). Важный параметр, который позволяет сразу принимать решения по повторным клиентам не заставляя клиента заполнять длинную форму еще раз.
+skip_factoring_result - в данный параметр передаются флаги true/false. По данным флагам определяется, была ли предоплата клиентом до вызова iframe Рево.
+
+
+Ответы от сервиса Рево
+
+
+Ответы при кейсах:
+
+Если аутентификация на этапе отправки данных на получение ссылки на iFrame Рево прошла успешно
+Если аутентификация не прошла (по какой либо причине)
+Описаны статусы ответов и их описание.
 
 ## Status
 
