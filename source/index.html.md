@@ -334,33 +334,172 @@ public class Main {
  | |
 -:|:-
 **order_id** <br> <font color="#939da3">string</font> | Уникальный номер заказа. Не более 255 символов.
+**amount** <br> <font color="#939da3">float</font> | Сумма в рублях с копейками.
+**check_number** <br> <font color="#939da3">string</font> | ???
 
 ### Response Parameters
 
-> Пример ответа, когда срок актуальности заказа ещё не вышел, решение по заказу (approved или declined) уже есть
+???
+
+## Cancel
+
+<font color="green"> POST </font> `BASE_URL/factoring/v1/precheck/cancel`
+
+Метод для отмены заказа. При отмене у клиента разблокируются ранее захолдированные средства.
+
+### Parameters
+
+> Пример запроса в формате json
 
 ```jsonnet
 {
-  status: 0,
-  message: "Payload valid",
-  current_order:
+  order_id: "R107356",
+}
+```
+
+ | |
+-:|:-
+**order_id** <br> <font color="#939da3">string</font> | Уникальный номер заказа. Не более 255 символов.
+
+### Response Parameters
+
+???
+
+## Limit
+
+<font color="green"> POST </font> `BASE_URL/api/external/v1/client/limit`
+
+Метод для получения суммы лимита по номеру телефона клиента.
+
+### Parameters
+
+> Пример запроса в формате json
+
+```jsonnet
+{
+  client:
   {
-    order_id: "R107356",
-    expired: "false",
-    decision: "approved",
-    amount: "6700.00",
-    discount_amount: "6100.00",
-    term: 3
+    mobile_phone: "9031234567"
   }
 }
 ```
 
+ | |
+-:|:-
+**client** <br> <font color="#939da3">object</font> | Объект, содержащий информацию о клиенте.
+**mobile_phone** <br> <font color="#939da3">integer</font> | Номер телефона клиента 10 цифр (без кода страны).
 
-## Cancel
+### Response Parameters
 
-## Limit
+> Пример ответа, когда клиент найден в базе
+
+```jsonnet
+{
+    meta:
+    {
+      status: 0,
+      message: "Payload valid"
+    }
+    client:
+    {
+      mobile_phone: "9031234567",
+      limit_amount: "9500.00",
+      status: "active"
+    }
+}
+```
+
+> Пример ответа, когда клиент найден в базе, но выдача займа невозможна
+
+```jsonnet
+{
+    meta:
+    {
+      status: 0,
+      message: "Payload valid"
+    }
+    client:
+    {
+      mobile_phone: "9031234567",
+      limit_amount: "6700.00",
+      status: "inactive"
+    }
+}
+```
+
+> Пример ответа, когда клиент не найден в базе
+
+```jsonnet
+{
+    meta:
+    {
+      status: 0,
+      message: "Payload valid"
+    }
+    client:
+    {
+      mobile_phone: "9031234567",
+      limit_amount: "0.00",
+      status: "new"
+    }
+}
+```
+
+ | |
+-:|:-
+**status** <br> <font color="#939da3">integer</font> | Код ответа.
+**message** <br> <font color="#939da3">string</font> | Короткое текстовое описание ответа.
+**client** <br> <font color="#939da3">object</font> | Объект, содержащий информацию о клиенте.
+**mobile_phone** <br> <font color="#939da3">integer</font> | Номер телефона клиента 10 цифр (без кода страны).
+**limit_amount** <br> <font color="#939da3">string</font> | ???
+**status** <br> <font color="#939da3">string</font> | ???
 
 ## Return
+
+<font color="green"> POST </font> `BASE_URL/factoring/v1/return`
+
+Метод для осуществления процедуры возврата заказа.
+
+### Parameters
+
+> Пример запроса в формате json
+
+```jsonnet
+{
+  order_id: "R001233",
+  sum: "2010.00"
+}
+```
+
+ | |
+-:|:-
+**order_id** <br> <font color="#939da3">string</font> | Уникальный номер заказа. Не более 255 символов.
+**sum** <br> <font color="#939da3">float</font> | ???
+
+### Response Parameters
+
+> Пример ответа при успешной обработке запроса на возврат
+
+```jsonnet
+{
+  status: "0",
+  message: "Payload valid"
+}
+```
+
+> Пример ответа при неуспешной обработке запроса на возврат
+
+```jsonnet
+{
+  status: "10",
+  message: "JSON decode error"
+}
+```
+
+ | |
+-:|:-
+**status** <br> <font color="#939da3">integer</font> | Код ответа.
+**message** <br> <font color="#939da3">string</font> | Короткое текстовое описание ответа.
 
 # Коды ошибок
 
